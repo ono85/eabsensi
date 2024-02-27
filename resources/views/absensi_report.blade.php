@@ -8,8 +8,13 @@
                 <div class="card-header">{{ __('Data Kehadiran') }}</div>
 
                 <div class="card-body">
+                    <div class="mb-1 row">
+                        <label for="inputPassword" class="col-sm-10 col-form-label text-end"><b>Periode</b></label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control form-control-sm" id="periode" name="periode" value="{{ $periode }}">
+                        </div>
+                    </div>
                     <div class="table-responsive-sm">
-
                         <table class="table">
                             <thead>
                                 <tr>
@@ -52,12 +57,26 @@
             </div>
         </div>
     </div>
-    @endsection
+</div>
+@endsection
 
-    @section('css')
-    @endsection
+@section('css')
+<link href="{{ asset('js/lib/datepicker/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+@endsection
 
-    @section('scripts')
-    <script type="text/javascript">
-    </script>
-    @endsection
+@section('scripts')
+<script src="{{ asset('js/lib/datepicker/bootstrap-datepicker.min.js') }}"></script>
+<script type="text/javascript">
+    $(function() {
+        $('#periode').datepicker({
+            format: "mm-yyyy",
+            viewMode: "months",
+            minViewMode: "months",
+            autoclose: true
+        }).on('changeDate', function(selected) {
+            window.location.href = "{{ route('absensi.report') }}/" + $('#periode').val();
+
+        });
+    });
+</script>
+@endsection

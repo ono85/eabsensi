@@ -7,20 +7,15 @@
             <div class="card">
                 <div class="card-header">{{ __('ABSENSI') }}</div>
 
-                <div class="card-body">
-
-                    <div class="row">
-                        <div class="col-sm-6 offset-sm-3 ">
-                            <form role="form" class="form-horizontal" id="form-absen" method="post">
-                                @csrf
-                                <div class="card" style="width: 18rem;">
-                                    <video autoplay="true" id="videoElement" disablePictureInPicture="true" controlsList="nodownload"></video>
-                                    <div id="googleMap" style="width:100%;height:150px; margin-top:2px"></div>
-                                    <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
-                                </div>
-                            </form>
+                <div class="card-body d-flex align-items-center justify-content-center">
+                    <form role="form" class="form-horizontal" id="form-absen" method="post">
+                        @csrf
+                        <div class="card" style="width: 18rem;">
+                            <video autoplay="true" id="videoElement" disablePictureInPicture="true" controlsList="nodownload"></video>
+                            <div id="googleMap" style="width:100%;height:125px; margin-top:2px"></div>
+                            <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="card-footer text-center">
                     <button id="save-absen" type="button" class="btn btn-sm btn-primary"> Simpan </button>

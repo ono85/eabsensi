@@ -25,7 +25,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/home/data', [App\Http\Controllers\HomeController::class, 'data'])->name('home.data');
 
     Route::get('/absensi', [App\Http\Controllers\AbsensiController::class, 'index'])->name('absensi');
-    Route::get('/absensi/report', [App\Http\Controllers\AbsensiController::class, 'report'])->name('absensi.report');
+    Route::get('/absensi/report/{periode?}', [App\Http\Controllers\AbsensiController::class, 'report'])->name('absensi.report');
     Route::post('/absensi/save', [App\Http\Controllers\AbsensiController::class, 'store'])->name('absensi.save');
 
     Route::get('/absensi/{tgl}/file/{filename}', [App\Http\Controllers\AbsensiController::class, 'file'])->name('absensi.file');

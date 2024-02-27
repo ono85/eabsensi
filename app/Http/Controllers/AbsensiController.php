@@ -189,7 +189,8 @@ class AbsensiController extends Controller
             ->orderBy('tanggal', 'DESC')->get();
 
         return view('absensi_report', [
-            'records' => $absensi
+            'records' => $absensi,
+            'periode' => $date[1] . '-' . $date[0]
         ]);
     }
 

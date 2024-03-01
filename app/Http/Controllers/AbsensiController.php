@@ -23,7 +23,11 @@ class AbsensiController extends Controller
      */
     public function index()
     {
-        return view('absensi', []);
+        return view('absensi', [
+            'radius'    => 10,
+            'latUnit'   => -7.279385,
+            'longUnit'  => 112.7268921,
+        ]);
     }
 
     /**
@@ -189,8 +193,7 @@ class AbsensiController extends Controller
             ->orderBy('tanggal', 'DESC')->get();
 
         return view('absensi_report', [
-            'records' => $absensi,
-            'periode' => $date[1] . '-' . $date[0]
+            'records'   => $absensi,
         ]);
     }
 

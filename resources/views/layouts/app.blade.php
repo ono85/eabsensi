@@ -76,8 +76,8 @@
                                     {{ __('User') }}
                                 </a>
 
-                                <a class="dropdown-item" href="#">
-                                    {{ __('Unit') }}
+                                <a class="dropdown-item" href="{{ route('unit_absensi') }}">
+                                    {{ __('Unit Absen') }}
                                 </a>
                             </div>
                         </li>

@@ -96,7 +96,7 @@ class AbsensiController extends Controller
 
             DB::beginTransaction();
             $absensi = Absensi::firstOrNew(['id' => null]);
-            $absensi->id_pegawai  = Auth::id();
+            $absensi->id_pegawai  = Auth::user()->name; //Auth::id();
             $absensi->latitude    = $input['latitude'];
             $absensi->longitude   = $input['longitude'];
             $absensi->tanggal     = date('Y-m-d H:i:s');
@@ -194,6 +194,7 @@ class AbsensiController extends Controller
 
         return view('absensi_report', [
             'records'   => $absensi,
+            'periode'   =>  $date[1] . '-' . $date[0]
         ]);
     }
 

@@ -52,7 +52,7 @@
 
     const optionLocation = {
         enableHighAccuracy: true,
-        timeout: 5000,
+        timeout: 10000,
         maximumAge: 0,
     };
 
@@ -85,12 +85,12 @@
     }
 
     function errorPosition(err) {
-        alert(err.message);
+        alert('GPS problem : ' + err.message);
     }
 
     function myMap(position) {
-        let lat = position.coords.latitude
-        let long = position.coords.longitude;
+        lat = position.coords.latitude
+        long = position.coords.longitude;
         if (!lat || !long) {
             alert('Lokasi tidak ditemukan');
             return false;
@@ -201,6 +201,8 @@
 
         return Number(d).toFixed(2); // returns the distance in meter
     };
+
+    function initMap() {}
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxo2e2wC0EWmZ5gdtroKuFs1TUPCTbAq0"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxo2e2wC0EWmZ5gdtroKuFs1TUPCTbAq0&loading=async"></script>
 @endsection

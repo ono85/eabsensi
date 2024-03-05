@@ -195,7 +195,7 @@ class UnitAbsensiController extends Controller
     public function setLokasi()
     {
         //RSUD BANGIL '-7.6051938, 112.8182255'
-        return '-7.2794069,112.7268877';
+        return  '-7.6051938, 112.8182255';
     }
     /**
      * Display a listing of the resource.

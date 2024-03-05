@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 
+use App\Models\UnitAbsensi;
 use App\Models\Absensi;
 
 class AbsensiController extends Controller
@@ -23,10 +24,13 @@ class AbsensiController extends Controller
      */
     public function index()
     {
+        $unitAbsensi = UnitAbsensi::find(Auth::user()->id_pegawai);
+
         return view('absensi', [
-            'radius'    => 10,
-            'latUnit'   => -7.279385,
-            'longUnit'  => 112.7268921,
+            'radius'    => $unitAbsensi->radius,
+            'latUnit'   => $unitAbsensi->latitude,
+            'longUnit'  => $unitAbsensi->longitude,
+            'namaUnit'  => $unitAbsensi->nama,
         ]);
     }
 
@@ -96,7 +100,7 @@ class AbsensiController extends Controller
 
             DB::beginTransaction();
             $absensi = Absensi::firstOrNew(['id' => null]);
-            $absensi->id_pegawai  = Auth::user()->name; //Auth::id();
+            $absensi->id_pegawai  = Auth::user()->id_pegawai; //Auth::id();
             $absensi->latitude    = $input['latitude'];
             $absensi->longitude   = $input['longitude'];
             $absensi->tanggal     = date('Y-m-d H:i:s');

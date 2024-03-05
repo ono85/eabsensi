@@ -40,15 +40,17 @@
 @endsection
 
 @section('scripts')
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxo2e2wC0EWmZ5gdtroKuFs1TUPCTbAq0&loading=async"></script>
 <script type="text/javascript">
-    const latUnit = <?php echo  $latUnit ?>;
-    const longUnit = <?php echo $longUnit ?>;
+    var latUnit = '{{ $latUnit }}';
+    var longUnit = '{{ $longUnit }}';
+    var radius = parseInt('{{ $radius }}');
+    var namaUnit = '{{ $namaUnit}}';
 
     var video = document.querySelector("#videoElement");
     var canvas = document.querySelector("#canvas");
-    var radius = <?php echo $radius  ?>;
     var errorDistance = false;
-    var lat, long;
+    var lat, long, map;
 
     const optionLocation = {
         enableHighAccuracy: true,
@@ -120,9 +122,9 @@
             keyboardShortcuts: false
         };
 
-        var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+        map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
         //lokasi user
-        var userMarker = new google.maps.Marker({
+        let userMarker = new google.maps.Marker({
             position: new google.maps.LatLng(lat, long),
             map: map,
             icon: 'images/map-person.png',
@@ -130,14 +132,19 @@
         });
 
         //lokasi unit
-        var unitMarker = new google.maps.Marker({
+        let unitMarker = new google.maps.Marker({
             position: new google.maps.LatLng(latUnit, longUnit),
             map: map,
-            title: "Posisi unit",
+            icon: 'images/fingerprint3.png',
+            title: "Lokasi absensi",
+            label: {
+                text: 'Absensi ' + namaUnit,
+                color: 'white',
+            }
         });
 
         //radius lokasi
-        var sunCircle = {
+        let sunCircle = {
             strokeColor: "#c3fc49",
             strokeOpacity: 0.8,
             strokeWeight: 2,
@@ -204,5 +211,4 @@
 
     function initMap() {}
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxo2e2wC0EWmZ5gdtroKuFs1TUPCTbAq0&loading=async"></script>
 @endsection

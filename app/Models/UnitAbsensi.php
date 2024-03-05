@@ -11,5 +11,5 @@ class UnitAbsensi extends Model
 
     protected $table = 'unit_absensi';
 
-    protected $fillable = ['id', 'nama', 'latitude', 'longitude', 'radius', 'id_pegawai'];
+    protected $fillable = ['id', 'nama', 'latitude', 'longitude', 'radius', 'created_by'];
 }

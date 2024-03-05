@@ -6,11 +6,17 @@
         <div class="col-md-10">
             <div class="card">
                 <div class="card-header">
-                    <strong>Unit Absen</strong>
+                    <strong>Lokasi Absen</strong>
 
-                    <button class="btn btn-sm btn-success float-end" data-bs-toggle="modal" data-bs-target="#ModalUnitAbsen">
-                        Add
-                    </button>
+                    <div class="float-end ">
+                        <a class="btn btn-sm btn-secondary" href="{{ route('unit_absensi.map') }}">
+                            <i class="fa-solid fa-map"></i> Map
+                        </a>
+
+                        <button class="btn btn-sm btn-success btn-add">
+                            <i class="fa-solid fa-plus"></i> Add
+                        </button>
+                    </div>
                 </div>
 
                 <div class="card-body">
@@ -42,7 +48,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" style="padding-top: 8px; padding-bottom:8px;">
-                    <h5 class="modal-title" id="staticBackdropLabel">Form Unit Absen</h5>
+                    <h5 class="modal-title" id="staticBackdropLabel">Form Lokasi Absen</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -60,6 +66,11 @@
                         <div class="col-sm-6">
                             <input type="text" class="form-control" id="inp-latitude" name="latitude" value="" readonly>
                             <div class="invalid-feedback" style="font-size: 90%"></div>
+                        </div>
+                        <div class="col-sm-3">
+                            <span class="btn btn-sm btn-secondary" onclick="getLocation()">
+                                <i class="fa-solid fa-magnifying-glass"></i> &nbsp;Posisi
+                            </span>
                         </div>
                     </div>
                     <div class="mb-3 row">
@@ -96,11 +107,13 @@
         maximumAge: 0,
     };
 
-    $("#ModalUnitAbsen").on('shown.bs.modal', function() {
+    $(document).ready(function() {
         $('.form-control').val('');
         $('.form-control').removeClass('is-invalid');
 
-        getLocation();
+        $(".btn-add").click(function() {
+            $("#ModalUnitAbsen").modal('show');
+        });
     });
 
     $(".btn-save").click(function() {
@@ -143,13 +156,10 @@
     });
 
     $("#table-unit_absen tbody").on("click", ".btn-edit", function() {
-        $('.form-control').val('');
-        $('.form-control').removeClass('is-invalid');
+        $('#ModalUnitAbsen').modal('show');
 
         id = $(this).data('id');
-        url = "{{ url('unit_absensi/edit') }}/" + id;
-        $.get(url, function(result) {
-            $('#ModalUnitAbsen').modal('show');
+        $.get("{{ url('unit_absensi/edit') }}/" + id, function(result) {
             $.each(result.data, function(index, value) {
                 $('[name ="' + index + '"]').val(value);
             });
@@ -194,7 +204,7 @@
     var $unitAbsen = $('#table-unit_absen').DataTable({
         "aoColumnDefs": [{
             "bSortable": false,
-            "aTargets": [1, 2, 3, 4]
+            "aTargets": [1, 2, 3, 4, 5]
         }, ],
         //fixedHeader: true,
         orderCellsTop: true,
@@ -264,7 +274,7 @@
 
                     $btnEdit = '<button type="button" class="btn btn-sm btn-edit btn-primary"' +
                         'data-id="' + row.data + '" >' +
-                        ' &nbsp; Edit &nbsp; ' +
+                        ' &nbsp; <i class="fa-regular fa-pen-to-square"></i> Edit &nbsp; ' +
                         '</button>'
                     return $btnAktif + ' ' + $btnEdit
                 }

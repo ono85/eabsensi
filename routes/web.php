@@ -41,4 +41,9 @@ Route::middleware(['auth'])->group(function () {
         ->name('unit_absensi.delete');
     Route::get('/unit_absensi/set_status/{id}', [App\Http\Controllers\UnitAbsensiController::class, 'set_status'])
         ->name('unit_absensi.set_status');
+
+    Route::get('/unit_absensi/map', [App\Http\Controllers\UnitAbsensiController::class, 'map'])
+        ->name('unit_absensi.map');
+    Route::get('/unit_absensi/map/data', [App\Http\Controllers\UnitAbsensiController::class, 'map_data'])
+        ->name('unit_absensi.map.data');
 });

@@ -108,7 +108,10 @@ class UnitAbsensiController extends Controller
             $ua->latitude   = $input['latitude'];
             $ua->longitude  = $input['longitude'];
             $ua->radius     = $input['radius'];
-            $ua->id_pegawai = Auth::user()->id_pegawai;
+            if (empty($input['id']))
+                $ua->created_by = Auth::user()->id_pegawai;
+            else
+                $ua->edited_by  = Auth::user()->id_pegawai;
             $ua->save();
 
             return Response::json([
@@ -134,7 +137,21 @@ class UnitAbsensiController extends Controller
      */
     public function edit($id)
     {
-        //
+        try {
+            $ua = UnitAbsensi::find($id, ['id', 'nama', 'radius', 'latitude', 'longitude']);
+            return Response::json([
+                'data'      => $ua,
+                'error'     => 0,
+                'code'      => ''
+            ]);
+        } catch (\Exception $ex) {
+            return Response::json([
+                'error'    => 1,
+                'message'  => $ex->getMessage(),
+                'line'     => $ex->getLine(),
+                'code'     => 'other'
+            ]);
+        }
     }
 
     /**
@@ -164,6 +181,47 @@ class UnitAbsensiController extends Controller
                 'error'     => 0,
                 'message'   => 'Data berhasil diubah',
                 'code'      => ''
+            ]);
+        } catch (\Exception $ex) {
+            return Response::json([
+                'error'    => 1,
+                'message'  => $ex->getMessage(),
+                'line'     => $ex->getLine(),
+                'code'     => 'other'
+            ]);
+        }
+    }
+
+    public function setLokasi()
+    {
+        //RSUD BANGIL '-7.6051938, 112.8182255'
+        return '-7.2794069,112.7268877';
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function map()
+    {
+        return view('unit_absensi_map', [
+            'position' => self::setLokasi(),
+            'radius' => 130
+        ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function map_data()
+    {
+        try {
+            $data = UnitAbsensi::where('status', 1)->get();
+            return Response::json([
+                'error'   => 0,
+                'data'    => $data
             ]);
         } catch (\Exception $ex) {
             return Response::json([

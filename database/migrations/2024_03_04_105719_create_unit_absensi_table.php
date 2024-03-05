@@ -19,8 +19,9 @@ class CreateUnitAbsensiTable extends Migration
             $table->string('latitude');
             $table->string('longitude');
             $table->unsignedInteger('radius');
-            $table->unsignedBigInteger('id_pegawai');
             $table->unsignedTinyInteger('status')->default('1');
+            $table->unsignedBigInteger('created_by');
+            $table->unsignedBigInteger('edited_by')->nullable();
             $table->timestamps();
         });
     }

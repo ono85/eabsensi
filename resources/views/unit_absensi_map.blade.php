@@ -28,7 +28,7 @@
     function initMap() {
         let mapProp = {
             center: new google.maps.LatLng(<?php echo $position ?>),
-            zoom: 22,
+            zoom: 18,
             mapTypeControl: false,
             //draggable: false,
             //zoomControl: false,

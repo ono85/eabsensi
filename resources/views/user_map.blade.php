@@ -6,11 +6,11 @@
         <div class="col-md-10">
             <div class="card">
                 <div class="card-header">
-                    <strong>Map Lokasi Absen</strong>
+                    <strong>Lokasi Absen</strong>
 
                     <div class="float-end ">
-                        <a class="btn btn-sm btn-secondary" href="{{ route('unit_absensi') }}">
-                            <i class="fa-solid fa-bars"></i> &nbsp;Data Lokasi Absen
+                        <a class="btn btn-sm btn-secondary" href="{{ route('absensi') }}">
+                            <i class="fa-solid fa-camera"></i> &nbsp;Absen
                         </a>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
     }
 
     function ShowAbsenLocation() {
-        $.getJSON("{{ route('unit_absensi.map.data') }}", function(result) {
+        $.getJSON("{{ route('absensi.map.data') }}", function(result) {
             if (result.error == 0) {
                 if (result.data.length > 0)
                     drawLocation(result.data);

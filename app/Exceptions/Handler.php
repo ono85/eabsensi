@@ -38,6 +38,20 @@ class Handler extends ExceptionHandler
             //
         });
 
+
+        //method not allowed
+        $this->renderable(function (\Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException $e, $request) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'error'     => 1,
+                    'message'   => 'Method not allowed',
+                    'code'      => 'csrf'
+                ]);
+            }
+
+            return redirect('/login');
+        });
+
         //csrf expired handler
         $this->renderable(function (\Symfony\Component\HttpKernel\Exception\HttpException $e, $request) {
             if ($e->getStatusCode() == 419) {

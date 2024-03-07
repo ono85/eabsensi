@@ -192,11 +192,12 @@ class UnitAbsensiController extends Controller
         }
     }
 
-    public function setLokasi()
+    public static function setLokasi()
     {
         //RSUD BANGIL '-7.6051938, 112.8182255'
         return  '-7.6051938, 112.8182255';
     }
+
     /**
      * Display a listing of the resource.
      *

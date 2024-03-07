@@ -6,24 +6,24 @@
         <div class="col-md-10">
             <div class="card">
                 <div class="card-header">
-                    <strong>Lokasi Absen</strong>
+                    <strong>Data Lokasi Absen</strong>
 
                     <div class="float-end ">
                         <a class="btn btn-sm btn-secondary" href="{{ route('unit_absensi.map') }}">
-                            <i class="fa-solid fa-map"></i> Map
+                            <i class="fa-solid fa-location-dot"></i> &nbsp;Lokasi
                         </a>
 
                         <button class="btn btn-sm btn-success btn-add">
-                            <i class="fa-solid fa-plus"></i> Add
+                            <i class="fa-solid fa-plus"></i> &nbsp;Add
                         </button>
                     </div>
                 </div>
 
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="table-unit_absen" class="table table-bordered" style="width: 100%;">
+                        <table id="table-unit-absen" class="table table-bordered" style="width: 100%;">
                             <thead>
-                                <tr>
+                                <tr class="table-light">
                                     <th style="text-align:left !important; width: 30%;">Nama</th>
                                     <th style="text-align:left !important; width: 15%;">Latitude</th>
                                     <th style="text-align:left !important; width: 15%;">Longitude</th>
@@ -54,17 +54,17 @@
                 <div class="modal-body">
                     <input type="hidden" name="id" value="" class="form-control">
                     @csrf
-                    <div class="mb-3 row">
+                    <div class="mb-1 row">
                         <label for="inputPassword" class="col-sm-2 col-form-label">Nama</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="inp-nama" name="nama" value="">
+                            <input type="text" class="form-control form-control-sm" id="inp-nama" name="nama" value="">
                             <div class="invalid-feedback" style="font-size: 90%"></div>
                         </div>
                     </div>
-                    <div class="mb-3 row">
+                    <div class="mb-1 row">
                         <label for="staticEmail" class="col-sm-2 col-form-label">Latitude</label>
                         <div class="col-sm-6">
-                            <input type="text" class="form-control" id="inp-latitude" name="latitude" value="" readonly>
+                            <input type="text" class="form-control form-control-sm" id="inp-latitude" name="latitude" value="" readonly>
                             <div class="invalid-feedback" style="font-size: 90%"></div>
                         </div>
                         <div class="col-sm-3">
@@ -73,17 +73,17 @@
                             </span>
                         </div>
                     </div>
-                    <div class="mb-3 row">
+                    <div class="mb-1 row">
                         <label for="staticEmail" class="col-sm-2 col-form-label">Longitude</label>
                         <div class="col-sm-6">
-                            <input type="text" class="form-control" id="inp-longitude" name="longitude" value="" readonly>
+                            <input type="text" class="form-control form-control-sm" id="inp-longitude" name="longitude" value="" readonly>
                             <div class="invalid-feedback" style="font-size: 90%"></div>
                         </div>
                     </div>
-                    <div class="mb-3 row">
+                    <div class="mb-1 row">
                         <label for="staticEmail" class="col-sm-2 col-form-label">Radius</label>
                         <div class="col-sm-5">
-                            <input type="text" class="form-control" id="inp-radius" name="radius" value="" style="width: 50%;">
+                            <input type="text" class="form-control form-control-sm" id="inp-radius" name="radius" value="" style="width: 50%;">
                             <div class="invalid-feedback" style="font-size: 90%"></div>
                         </div>
                     </div>
@@ -96,7 +96,6 @@
         </div>
     </form>
 </div>
-
 @endsection
 
 @section('scripts')
@@ -108,58 +107,44 @@
     };
 
     $(document).ready(function() {
-        $('.form-control').val('');
-        $('.form-control').removeClass('is-invalid');
-
         $(".btn-add").click(function() {
+            $('.form-control').val('');
+            $('.form-control').removeClass('is-invalid');
             $("#ModalUnitAbsen").modal('show');
         });
     });
 
     $(".btn-save").click(function() {
-        url = "{{ route('unit_absensi.save') }}";
-        data = $('#formUnitAbsen').serialize();
+        if (confirm('Apakah data disimpan ? ')) {
+            $('.form-control').removeClass('is-invalid');
+            $.post("{{ route('unit_absensi.save') }}", $('#formUnitAbsen').serialize(), function(result) {
+                if (result.error == 0) {
+                    $('#ModalUnitAbsen').modal('hide');
+                    $unitAbsen.ajax.reload();
+                } else if (result.error == 1) {
+                    if (result.code == 'csrf' || result.code == 'other') {
+                        alert(result.message);
+                    }
 
-        $('.form-control').removeClass('is-invalid');
-        $.post(url, data, function(result) {
-            if (result.error == 0) {
-                $('#ModalUnitAbsen').modal('hide');
-                $unitAbsen.ajax.reload();
-            } else if (result.error == 1) {
-                if (result.code == 'csrf' || result.code == 'other') {
-                    alert(result.message);
-                }
+                    if (result.code == 'validation') {
+                        $.each(result.message, function(index, value) {
+                            $("[name='" + index + "']").addClass('is-invalid').next().html(value);
+                        });
 
-                if (result.code == 'validation') {
-                    $.each(result.message, function(index, value) {
-                        $("[name='" + index + "']").addClass('is-invalid').next().html(value);
-                    });
-
+                        alert('System Error');
+                    }
+                } else {
                     alert('System Error');
                 }
-            } else {
-                alert('System Error');
-            }
-        });
+            });
+        }
     });
 
-    $("#table-unit_absen tbody").on("click", ".btn-delete", function() {
-        id = $(this).data('id');
-        url = "{{ url('unit_absensi/delete') }}/" + id;
-        $.get(url, function(data) {
-            if (data.error == 0) {
-                $unitAbsen.ajax.reload();
-            } else {
-                alert('System Error');
-            }
-        }, "json");
-    });
-
-    $("#table-unit_absen tbody").on("click", ".btn-edit", function() {
-        $('#ModalUnitAbsen').modal('show');
-
-        id = $(this).data('id');
-        $.get("{{ url('unit_absensi/edit') }}/" + id, function(result) {
+    $("#table-unit-absen tbody").on("click", ".btn-edit", function() {
+        $.get("{{ url('unit_absensi/edit') }}/" + $(this).data('id'), function(result) {
+            $('.form-control').val('');
+            $('.form-control').removeClass('is-invalid');
+            $('#ModalUnitAbsen').modal('show');
             $.each(result.data, function(index, value) {
                 $('[name ="' + index + '"]').val(value);
             });
@@ -201,7 +186,7 @@
         }, "json");
     }
 
-    var $unitAbsen = $('#table-unit_absen').DataTable({
+    var $unitAbsen = $('#table-unit-absen').DataTable({
         "aoColumnDefs": [{
             "bSortable": false,
             "aTargets": [1, 2, 3, 4, 5]

@@ -72,12 +72,12 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{ route('user') }}">
                                     {{ __('User') }}
                                 </a>
 
                                 <a class="dropdown-item" href="{{ route('unit_absensi') }}">
-                                    {{ __('Unit Absen') }}
+                                    {{ __('Lokasi Absen') }}
                                 </a>
                             </div>
                         </li>
@@ -106,6 +106,10 @@
 
                                 <a class="dropdown-item" href="{{ route('absensi.report') }}">
                                     {{ __('Data Kehadiran') }}
+                                </a>
+
+                                <a class="dropdown-item" href="{{ route('absensi.report') }}">
+                                    {{ __('Ubah Password') }}
                                 </a>
 
                                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();

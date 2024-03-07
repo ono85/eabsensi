@@ -24,7 +24,7 @@ class AbsensiController extends Controller
      */
     public function index()
     {
-        $unitAbsensi = UnitAbsensi::find(Auth::user()->id_pegawai);
+        $unitAbsensi = UnitAbsensi::where('id', Auth::user()->id_unit_absensi)->where('status', 1)->first();
 
         return view('absensi', [
             'radius'    => $unitAbsensi->radius,
@@ -219,6 +219,48 @@ class AbsensiController extends Controller
             $response->header("Content-Type", $type);
 
             return $response;
+        }
+    }
+
+    public static function setLokasi()
+    {
+        //RSUD BANGIL '-7.6051938, 112.8182255'
+        return  '-7.6051938, 112.8182255';
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function map()
+    {
+        return view('user_map', [
+            'position' => self::setLokasi(),
+            'radius' => 130
+        ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function map_data()
+    {
+        try {
+            $data = UnitAbsensi::where('id', Auth::user()->id_unit_absensi)->where('status', 1)->get();
+            return Response::json([
+                'error'   => 0,
+                'data'    => $data
+            ]);
+        } catch (\Exception $ex) {
+            return Response::json([
+                'error'    => 1,
+                'message'  => $ex->getMessage(),
+                'line'     => $ex->getLine(),
+                'code'     => 'other'
+            ]);
         }
     }
 }

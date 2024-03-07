@@ -8,7 +8,15 @@
                 <div class="card-header">
                     {{ __('ABSENSI') }}
 
-                    <button id="save-absen" type="button" class="btn btn-sm btn-primary float-end"> Simpan </button>
+                    <div class="float-end">
+                        <a class="btn btn-sm btn-secondary" href="{{ route('absensi.map') }}">
+                            <i class="fa-solid fa-location-dot"></i> Lokasi
+                        </a>
+                        &nbsp;
+                        <button id="save-absen" type="button" class="btn btn-sm btn-primary float-end">
+                            <i class="fa-solid fa-share-from-square"></i> Simpan
+                        </button>
+                    </div>
                 </div>
 
                 <div class="card-body">

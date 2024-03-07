@@ -24,11 +24,22 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::post('/home/data', [App\Http\Controllers\HomeController::class, 'data'])->name('home.data');
 
+    //user
+    Route::get('/user', [App\Http\Controllers\UserController::class, 'index'])->name('user');
+    Route::get('/user/data', [App\Http\Controllers\UserController::class, 'data'])->name('user.data');
+    Route::post('/user/save', [App\Http\Controllers\UserController::class, 'store'])->name('user.save');
+    Route::get('/user/edit/{id}', [App\Http\Controllers\UserController::class, 'edit'])->name('user.edit');
+    Route::get('/user/delete/{id}', [App\Http\Controllers\UserController::class, 'destroy'])->name('user.delete');
+
+    //absensi
     Route::get('/absensi', [App\Http\Controllers\AbsensiController::class, 'index'])->name('absensi');
     Route::get('/absensi/report/{periode?}', [App\Http\Controllers\AbsensiController::class, 'report'])->name('absensi.report');
     Route::post('/absensi/save', [App\Http\Controllers\AbsensiController::class, 'store'])->name('absensi.save');
     Route::get('/absensi/{tgl}/file/{filename}', [App\Http\Controllers\AbsensiController::class, 'file'])->name('absensi.file');
+    Route::get('/absensi/map', [App\Http\Controllers\AbsensiController::class, 'map'])->name('absensi.map');
+    Route::get('/absensi/map/data', [App\Http\Controllers\AbsensiController::class, 'map_data'])->name('absensi.map.data');
 
+    //lokasi absensi
     Route::get('/unit_absensi', [App\Http\Controllers\UnitAbsensiController::class, 'index'])
         ->name('unit_absensi');
     Route::get('/unit_absensi/data', [App\Http\Controllers\UnitAbsensiController::class, 'data'])

@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->unsignedBigInteger('id_pegawai');
             $table->unsignedTinyInteger('id_unit_absensi');
+            $table->unsignedTinyInteger('id_group');
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('edited_by')->nullable();
             $table->timestamps();

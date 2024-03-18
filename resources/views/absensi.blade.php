@@ -122,11 +122,11 @@
             center: new google.maps.LatLng(lat, long),
             zoom: 21,
             mapTypeControl: false,
-            // draggable: false,
+            draggable: false,
             zoomControl: false,
             scrollwheel: false,
             disableDoubleClickZoom: true,
-            //fullscreenControl: false,
+            fullscreenControl: false,
             keyboardShortcuts: false
         };
 

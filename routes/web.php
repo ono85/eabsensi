@@ -57,4 +57,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('unit_absensi.map');
     Route::get('/unit_absensi/map/data', [App\Http\Controllers\UnitAbsensiController::class, 'map_data'])
         ->name('unit_absensi.map.data');
+
+    //report
+    Route::get('/report/absensi/{tgl?}', [App\Http\Controllers\ReportController::class, 'absensi'])->name('report.absensi');
 });

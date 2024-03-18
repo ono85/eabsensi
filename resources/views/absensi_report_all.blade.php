@@ -3,47 +3,47 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">{{ __('Data Kehadiran') }}</div>
 
                 <div class="card-body">
                     <div class="mb-1 row">
-                        <label for="inputPassword" class="col-sm-10 col-form-label text-end"><b>Periode</b></label>
+                        <label for="inputPassword" class="col-sm-10 col-form-label text-end"><b>Tanggal</b></label>
                         <div class="col-sm-2">
-                            <input type="text" class="form-control form-control-sm" id="periode" name="periode" value="{{ $periode }}">
+                            <input type="text" class="form-control form-control-sm" id="tgl" name="tgl" value="{{ $tanggal }}">
                         </div>
                     </div>
                     <div class="table-responsive-sm">
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th scope="col">Tanggal</th>
-                                    <th scope="col">Jam</th>
-                                    <th scope="col">Lokasi</th>
-                                    <th scope="col">File</th>
+                                    <th scope="col" style="width: 35%;">Nama</th>
+                                    <th scope="col">Masuk</th>
+                                    <th scope="col">Pulang</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @php $date = ''; @endphp
                                 @forelse ($records as $row )
                                 <tr>
                                     <td>
-                                        @if( $date != $row->tanggal->format('d/m/Y') )
-                                        {{ $row->tanggal->format('d/m/Y') }}
-                                        @php $date = $row->tanggal->format('d/m/Y'); @endphp
+                                        {{ $row->nama }}
+                                    </td>
+                                    <td>
+                                        @if( !empty($row->masuk) )
+                                        {{ date('d-m-Y  H:i:s', strtotime($row->masuk)) }} &nbsp;
+                                        <a class="btn btn-sm btn-primary" target="_blank" href="{{ url('absensi/'.date('dmY', strtotime($row->masuk)).'/file/'.$row->mfilename.'/' ) }}">
+                                            <i class="fa-regular fa-file-image"></i> Foto
+                                        </a>
                                         @endif
                                     </td>
                                     <td>
-                                        {{ $row->tanggal->format('H:i:s') }}
-                                    </td>
-                                    <td>
-                                        {{ $row->latitude .' , '.$row->longitude }}
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-sm btn-primary" target="_blank" href="{{ url('absensi/'.$row->tanggal->format('dmY').'/file/'.$row->filename.'/' ) }}">
+                                        @if( !empty($row->pulang) )
+                                        {{ date('d-m-Y  H:i:s', strtotime($row->pulang)) }} &nbsp;
+                                        <a class="btn btn-sm btn-primary" target="_blank" href="{{ url('absensi/'.date('dmY', strtotime($row->pulang)).'/file/'.$row->pfilename.'/' ) }}">
                                             <i class="fa-regular fa-file-image"></i> Foto
                                         </a>
+                                        @endif
                                     </td>
                                 </tr>
                                 @empty
@@ -72,13 +72,11 @@
 <script src="{{ asset('js/lib/datepicker/bootstrap-datepicker.min.js') }}"></script>
 <script type="text/javascript">
     $(function() {
-        $('#periode').datepicker({
-            format: "mm-yyyy",
-            viewMode: "months",
-            minViewMode: "months",
+        $('#tgl').datepicker({
+            format: "dd-mm-yyyy",
             autoclose: true
         }).on('changeDate', function(selected) {
-            window.location.href = "{{ route('absensi.report') }}/" + $('#periode').val();
+            window.location.href = "{{ route('report.absensi') }}/" + $('#tgl').val();
 
         });
     });

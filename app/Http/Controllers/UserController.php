@@ -32,7 +32,7 @@ class UserController extends Controller
         return view(
             'user',
             [
-                'employees' => DB::table('majapahit.karyawan')->get(),
+                'employees' => DB::table('bangil_kepegawaian.ms_user')->get(),
                 'groups'    => UserGroup::where('status', 1)->get(),
                 'locations' => UnitAbsensi::where('status', 1)->get(),
             ]
@@ -47,24 +47,24 @@ class UserController extends Controller
      */
     public function data(Request $request)
     {
-        $input = $request->all();
-        $email = empty($input['email']) ? '' : $input['email'];
-        $name  = empty($input['name'])   ? '' : $input['name'];
+        $input      = $request->all();
+        $username   = empty($input['username']) ? '' : $input['username'];
+        $nama       = empty($input['nama'])   ? '' : $input['nama'];
 
         $aColumns   = array(
             'k.nama',
-            'u.email',
-            'u.name',
+            'k.username',
             'ua.nama',
             'ug.nama',
         );
 
         $iTotalRecords  = DB::table('users as u')
             ->selectRaw('COUNT(*) AS total')
-            ->join('unit_absensi as ua', 'ua.id', '=', 'u.id_unit_absensi')
-            ->join('majapahit.karyawan as k', 'k.id', '=', 'u.id_pegawai')
-            ->where('u.name', 'LIKE', '%' . $name . '%')
-            ->where('u.email',   'LIKE', '%' . $email . '%')
+            ->join('bangil_kepegawaian.ms_user as k', 'k.id', '=', 'u.id_pegawai')
+            ->leftJoin('unit_absensi as ua', 'ua.id', '=', 'u.id_unit_absensi')
+            ->leftJoin('user_groups as ug', 'ug.id', '=', 'u.id_group')
+            ->where('k.nama', 'LIKE', '%' . $nama . '%')
+            ->where('k.username',   'LIKE', '%' . $username . '%')
             ->first();
 
         $iDisplayLength = intval($input['iDisplayLength']);
@@ -81,12 +81,12 @@ class UserController extends Controller
         }
 
         $users  = DB::table('users as u')
-            ->selectRaw('u.id data, k.nama, k.npk, u.email, u.name, ua.nama lokasi, ug.nama ugroup')
-            ->join('unit_absensi as ua', 'ua.id', '=', 'u.id_unit_absensi')
-            ->join('user_groups as ug', 'ug.id', '=', 'u.id_group')
-            ->join('majapahit.karyawan as k', 'k.id', '=', 'u.id_pegawai')
-            ->where('u.name', 'LIKE', '%' . $name . '%')
-            ->where('u.email',   'LIKE', '%' . $email . '%')
+            ->selectRaw('u.id data, k.nama, k.username, ua.nama lokasi, ug.nama ugroup')
+            ->join('bangil_kepegawaian.ms_user as k', 'k.id', '=', 'u.id_pegawai')
+            ->leftJoin('unit_absensi as ua', 'ua.id', '=', 'u.id_unit_absensi')
+            ->leftJoin('user_groups as ug', 'ug.id', '=', 'u.id_group')
+            ->where('k.nama', 'LIKE', '%' . $nama . '%')
+            ->where('k.username',   'LIKE', '%' . $username . '%')
             ->take($iDisplayLength)->skip($iDisplayStart)
             ->orderBy($sortCol, $sortBy)
             ->get();
@@ -108,21 +108,10 @@ class UserController extends Controller
     {
         $input = $request->all();
         $rules = [
-            //'name'              => 'required|string|max:255',
-            //'email'     => 'required|string|email|max:255|unique:users',
-            'password'          => 'required|string|min:8|max:255',
             'id_pegawai'        => 'required|string|max:255|unique:users',
             'id_unit_absensi'   => 'required|numeric',
             'id_group'          => 'required|numeric',
         ];
-
-        //if edit
-        if (!empty($input['id'])) {
-            $rules['id_pegawai'] = 'required|string|max:255|unique:users,id,' . $input['id'];
-            //if not change password
-            if (empty($input['change_password']))
-                unset($rules['password']);
-        }
 
         $messages = [
             'required'  => 'Tidak boleh kosong',
@@ -135,6 +124,11 @@ class UserController extends Controller
             'id_pegawai.unique'    => 'Data pegawai sudah terdaftar'
         ];
 
+        //if edit
+        if (!empty($input['id'])) {
+            $rules['id_pegawai'] = 'required|string|max:255|unique:users,id,' . $input['id'];
+        }
+
         $validator  = Validator::make($input, $rules, $messages);
         if ($validator->fails()) {
             return Response::json([
@@ -145,7 +139,7 @@ class UserController extends Controller
         }
 
         try {
-            $pegawai = DB::table('majapahit.karyawan')->where('id', $input['id_pegawai'])->first();
+            $pegawai = DB::table('bangil_kepegawaian.ms_user')->where('id', $input['id_pegawai'])->first();
             if ($pegawai === null && empty($pegawai)) {
                 throw new \Exception('sistem error : data pegawai tidak ditemukan');
             }
@@ -156,9 +150,11 @@ class UserController extends Controller
             $user->email        = $pegawai->email;
             $user->id_group     = $input['id_group'];
             $user->id_unit_absensi = $input['id_unit_absensi'];
-
-            if (empty($input['id']) || (!empty($input['id']) && !empty($input['change_password'])))
-                $user->password     = Hash::make($input['password']);
+            if (empty($input['id'])) {
+                $user->created_by = Auth::user()->id_pegawai;
+            } else {
+                $user->edited_by  = Auth::user()->id_pegawai;
+            }
             $user->save();
 
             return Response::json([

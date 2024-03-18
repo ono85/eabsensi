@@ -42,4 +42,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getDataPegawai()
+    {
+        return \DB::table('bangil_kepegawaian.ms_user as u')
+            ->select('u.nama')
+            ->where('u.id', $this->id_pegawai)
+            ->first();
+    }
 }

@@ -7,8 +7,10 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Auth;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 
 class LoginController extends Controller
 {
@@ -45,12 +47,23 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required',
+            'username' => 'required',
             'password' => 'required',
         ]);
 
-        if (Auth::Attempt(['email' => request('email'), 'password' => request('password')])) {
+        $user = User::join('bangil_kepegawaian.ms_user as u', 'u.id', '=', 'users.id_pegawai')
+            ->select('users.*')
+            ->where('u.username', $request->input('username'))
+            ->where('u.password', md5($request->input('password')))
+            ->first();
+
+        if (!empty($user) && $user->count() > 0) {
+            Auth::login($user);
             return redirect()->route('home');
+        } else {
+            return Redirect::back()->withErrors([
+                'username' => 'Silahkan cek username dan password'
+            ]);
         }
 
         self::sendFailedLoginResponse($request);

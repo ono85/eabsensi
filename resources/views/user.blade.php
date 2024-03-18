@@ -22,7 +22,6 @@
                             <thead>
                                 <tr class="table-light">
                                     <th style="text-align:left !important">Nama</th>
-                                    <!--<th style="text-align:left !important">Email</th>-->
                                     <th style="text-align:left !important">Username</th>
                                     <th style="text-align:left !important">Lokasi Absen</th>
                                     <th style="text-align:left !important">Group</th>
@@ -88,22 +87,6 @@
                             <div class="invalid-feedback" style="font-size: 90%"></div>
                         </div>
                     </div>
-                    <div class="row">
-                        <label for="staticEmail" class="col-sm-3 col-form-label">Password</label>
-                        <div class="col-sm-6">
-                            <input type="password" name="password" class="form-control form-control-sm" placeholder="Password">
-                            <div class="invalid-feedback" style="font-size: 90%"></div>
-                        </div>
-                    </div>
-                    <div class="mb-1 row row-password">
-                        <label for="staticEmail" class="col-sm-3 col-form-label"></label>
-                        <div class="col-sm-6">
-                            <input class="form-check-input" type="checkbox" value="1" id="check-password" name="change_password" onclick="check_password()">
-                            <label class="form-check-label" for="check-password">
-                                <small> <em> Ganti Password </em> </small>
-                            </label>
-                        </div>
-                    </div>
                 </div>
                 <div class="modal-footer justify-content-center">
                     <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -134,9 +117,6 @@
         });
 
         $(".btn-add").click(function() {
-            $('.row-password').hide();
-            $("input[name='password']").prop('disabled', false);
-
             $('.form-control').val('');
             $(".select2").val('').trigger('change');
             $('.form-control, .form-select ').removeClass('is-invalid');
@@ -166,10 +146,6 @@
             $.get("{{ url('user/edit') }}/" + $(this).data('id'), function(result) {
                 if (result.error == 0) {
                     $(".btn-add").click();
-
-                    $('.row-password').show();
-                    $('#check-password').prop('checked', false);
-                    check_password();
 
                     $.each(result.data, function(index, value) {
                         $('[name ="' + index + '"]').val(value);
@@ -245,15 +221,8 @@
                     "sWidth": "25%",
                     "sClass": ""
                 },
-                /*
                 {
-                    mData: 'email',
-                    "sWidth": "15%",
-                    "sClass": ""
-                },
-                */
-                {
-                    mData: 'name',
+                    mData: 'username',
                     "sWidth": "20%",
                     "sClass": ""
                 },
@@ -287,10 +256,5 @@
             ]
         });
     });
-
-    function check_password() {
-        $disabled = ($("#check-password:checked").val() == 1) ? false : true;
-        $("input[name='password']").prop('disabled', $disabled);
-    }
 </script>
 @endsection

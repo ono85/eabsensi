@@ -25,6 +25,12 @@ class AbsensiController extends Controller
     public function index()
     {
         $unitAbsensi = UnitAbsensi::where('id', Auth::user()->id_unit_absensi)->where('status', 1)->first();
+        if (empty($unitAbsensi)) {
+            return view('errors.error-custom', [
+                'code' => 404,
+                'message' => 'Unit absensi belum disetting'
+            ]);
+        }
 
         return view('absensi', [
             'radius'    => $unitAbsensi->radius,

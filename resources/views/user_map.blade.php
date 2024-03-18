@@ -26,7 +26,7 @@
 @endsection
 
 @section('scripts')
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxo2e2wC0EWmZ5gdtroKuFs1TUPCTbAq0&loading=async&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxo2e2wC0EWmZ5gdtroKuFs1TUPCTbAq0&loading=async&callback=initMap"></script>
 <script type="text/javascript">
     var map;
     var markers = [];
